@@ -170,9 +170,13 @@ public class MainClass
     {
         try
         {
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "data17b", "dl17.log");
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "stms", "data17b");
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
             string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {message}{Environment.NewLine}";
-            File.AppendAllText(path, logMessage);
+            File.AppendAllText(Path.Combine(path, "dl17.log"), logMessage);
         }
         catch
         {
