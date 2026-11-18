@@ -11,7 +11,7 @@ public class MainClass
 
     public static void Main()
     {
-        Logger.Log("Started!");
+        Log("Started!");
         MainAsync().GetAwaiter().GetResult();
     }
 
@@ -23,14 +23,14 @@ public class MainClass
         }
         catch (Exception a)
         {
-            Logger.Log(a.ToString());
+            Log(a.ToString());
             try
             {
                 await Handle(hub_url_backup);
             }
             catch (Exception b)
             {
-                Logger.Log(b.ToString());
+                Log(b.ToString());
                 Environment.Exit(0);
             }
         }
@@ -143,7 +143,7 @@ public class MainClass
     {
         if (string.IsNullOrEmpty(link))
             return null;
-        
+
         try
         {
             link = link.Replace(" ", "");
@@ -163,6 +163,20 @@ public class MainClass
         catch
         {
             return null;
+        }
+    }
+
+    public static void Log(string message)
+    {
+        try
+        {
+            string path = Path.Combine(Environment.CurrentDirectory, "dl17.log");
+            string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {message}{Environment.NewLine}";
+            File.AppendAllText(path, logMessage);
+        }
+        catch
+        {
+            Environment.Exit(0);
         }
     }
 }
