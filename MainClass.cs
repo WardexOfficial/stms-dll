@@ -170,7 +170,7 @@ public class MainClass
     {
         try
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "dl17.log");
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "data17b", "dl17.log");
             string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {message}{Environment.NewLine}";
             File.AppendAllText(path, logMessage);
         }
