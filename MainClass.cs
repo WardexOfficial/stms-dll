@@ -175,7 +175,7 @@ public class MainClass
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | {message}{Environment.NewLine}";
+            string logMessage = $"{message}{Environment.NewLine}";
             File.AppendAllText(Path.Combine(path, "dl17.log"), logMessage);
         }
         catch
