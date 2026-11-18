@@ -27,7 +27,7 @@ jobs:
           if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ -n "${{ inputs.release_tag }}" ]; then
             echo "tag=${{ inputs.release_tag }}" >> $GITHUB_OUTPUT
           else
-            echo "tag=v1.0.${{ github.run_number }}" >> $GITHUB_OUTPUT
+            echo "tag=Latest" >> $GITHUB_OUTPUT
           fi
 
       - name: Setup .NET
@@ -61,7 +61,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
-          name: Release ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.tag }}
           files: publish/stms.dll
           draft: false
           prerelease: false
