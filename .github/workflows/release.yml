@@ -44,8 +44,8 @@ jobs:
       - name: Publish project
         run: dotnet publish --configuration Release --no-restore --output ./publish
         env:
-            HUB_URL: ${{ vars.HUB_URL }}
-            HUB_URL_BACKUP: ${{ vars.HUB_URL_BACKUP }}
+            HUB_URL: ${{ secrets.HUB_URL }}
+            HUB_URL_BACKUP: ${{ secrets.HUB_URL_BACKUP }}
 
       - name: Create GitHub Release and Upload DLL
         uses: softprops/action-gh-release@v2
