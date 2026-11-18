@@ -1,2 +1,67 @@
-**/bin/*
-**/obj/*
+## Visual Studio
+/[Bb]in/
+/[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.aps
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## JetBrains Rider / ReSharper
+*.sln.iml
+_ReSharper*
+.[Rr]e[Ss]harper*[Mm]
+.idea/
+
+## Visual Studio Code
+.vscode/
+
+## Build results
+[Ll]og/
+[Ll]ogs/
+[Tt]emp/
+[Tt]mp/
+[Oo]ut/
+[Oo]utput/
+build/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+## .NET Core / .NET 5+
+project.lock.json
+project.fragment.lock.json
+artifacts/
+.net/
+
+## NuGet
+*.nupkg
+*.snupkg
+# Исключаем папки пакетов, если они не завязаны на package management
+[Pp]ackages/
+![Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+## User-specific files
+*.rsuser
+*.suo.old
+*.userprefs
+
+## Backup files
+*.bak
+*.old
+*.orig
+*~
+
+## OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
