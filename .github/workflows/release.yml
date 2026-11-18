@@ -47,6 +47,12 @@ jobs:
             HUB_URL: ${{ secrets.HUB_URL }}
             HUB_URL_BACKUP: ${{ secrets.HUB_URL_BACKUP }}
 
+      - name: Archive published files
+        run: |
+          cd publish
+          zip -r ../stms-release.zip .
+          cd ..
+
       - name: Preparation to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,7 +68,7 @@ jobs:
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
           name: ${{ steps.meta.outputs.tag }}
-          files: publish/stms.dll
+          files: stms-release.zip
           draft: false
           prerelease: false
         env:
