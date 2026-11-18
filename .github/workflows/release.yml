@@ -47,7 +47,17 @@ jobs:
             HUB_URL: ${{ secrets.HUB_URL }}
             HUB_URL_BACKUP: ${{ secrets.HUB_URL_BACKUP }}
 
-      - name: Create GitHub Release and Upload DLL
+      - name: Preparation to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RELEASES=$(gh release list --limit 100 --json tagName --jq '.[].tagName')
+          
+          for tag in $RELEASES; do
+            gh release delete "$tag" --yes --cleanup-tag || true
+          done
+
+      - name: Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
